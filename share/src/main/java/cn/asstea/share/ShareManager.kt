@@ -13,13 +13,13 @@ import cn.asstea.share.sdk.*
  * time   : 2017/06/29
  * desc   : ShareManager接口
  */
-interface ShareManager : ShareWeixin, ShareQQ, ShareWeibo {
+interface ShareManager : ShareWeixin, ShareQQ, ShareWeibo, AuthorizeWeibo {
 
     val shareWeixin: ShareWeixinImpl
 
     val shareQQ: ShareQQImpl
 
-    val shareWeiBo:ShareWeiBoImpl
+    val shareWeiBo: ShareWeiBoImpl
 
     var dialog: ShareActivity?
 
@@ -48,7 +48,7 @@ interface ShareManager : ShareWeixin, ShareQQ, ShareWeibo {
     /**
      * 分享小格子點擊事件
      */
-    fun setShareOnClickListener(shareInfo: ShareInfo)
+    fun setShareOnClickListener(shareInfo: ShareInfo?)
 
 
     /**

@@ -1,5 +1,6 @@
 package cn.asstea.share.sdk
 
+import cn.asstea.share.entity.ShareResultCallback1
 import cn.asstea.share.entity.WeiBoShareInfo
 
 /**
@@ -10,6 +11,14 @@ import cn.asstea.share.entity.WeiBoShareInfo
  */
 interface ShareWeibo {
 
+    /**
+     * 分享到微博
+     */
     fun shareWeibo(weiBoShareInfo: WeiBoShareInfo)
+
+    /**
+     * 分享到微博，九宫格专用
+     */
+    fun shareWeibo(weiBoShareInfo: WeiBoShareInfo, shareResultCallback: ShareResultCallback1) {}
 
 }

@@ -40,21 +40,12 @@
 
         </activity>
 
-        <!-- 微博分享 -->
-        <activity
-            android:name="cn.asstea.share.activity.WeiboShareActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="portrait"
-            android:theme="@style/share_translucent_full_screen_theme">
-
-            <intent-filter>
-
-                <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-
-            </intent-filter>
-        </activity>
+        <!--&lt;!&ndash; 微博分享 &ndash;&gt;-->
+        <!--<activity-->
+            <!--android:name="cn.asstea.share.activity.WeiboShareActivity"-->
+            <!--android:configChanges="orientation|screenSize|keyboardHidden"-->
+            <!--android:screenOrientation="portrait"-->
+            <!--android:theme="@style/share_translucent_full_screen_theme"/>-->
 
     </application>
 

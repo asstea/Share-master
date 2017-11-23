@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import cn.asstea.share.Share
 import cn.asstea.share.ShareOnClickManager
-import cn.asstea.share.entity.ShareResult
+import cn.asstea.share.entity.ShareResultCode
 import com.tencent.mm.sdk.openapi.BaseReq
 import com.tencent.mm.sdk.openapi.BaseResp
 import com.tencent.mm.sdk.openapi.ConstantsAPI
@@ -20,26 +20,26 @@ open class WXEntryActivity : AppCompatActivity(), IWXAPIEventHandler {
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Share.ShareManager().shareWeixin.iwxapi?.handleIntent(intent, this)
+        Share.shareManager().shareWeixin.iwxapi?.handleIntent(intent, this)
     }
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
-        Share.ShareManager().shareWeixin.iwxapi?.handleIntent(intent, this)
+        Share.shareManager().shareWeixin.iwxapi?.handleIntent(intent, this)
     }
 
     override fun onResp(p0: BaseResp?) {
         when (p0?.errCode) {
             BaseResp.ErrCode.ERR_OK -> {
-                ShareOnClickManager.shareOnClickManager?.setSourceActivityResult(ShareResult.Code.OK)
+                ShareOnClickManager.shareOnClickManager?.setSourceActivityResult(ShareResultCode.OK)
             }
             BaseResp.ErrCode.ERR_USER_CANCEL,
             BaseResp.ErrCode.ERR_AUTH_DENIED -> {
-                ShareOnClickManager.shareOnClickManager?.setSourceActivityResult(ShareResult.Code.ERROR)
+                ShareOnClickManager.shareOnClickManager?.setSourceActivityResult(ShareResultCode.ERROR)
             }
             else -> {
-                ShareOnClickManager.shareOnClickManager?.setSourceActivityResult(ShareResult.Code.ERROR)
+                ShareOnClickManager.shareOnClickManager?.setSourceActivityResult(ShareResultCode.ERROR)
             }
         }
         this.finish()

@@ -21,7 +21,7 @@ class ShareWeixinImpl : ShareWeixin {
     init {
         //获取应用Manifest中的wx_api_id
         val config = Share.config()
-        config?.let {
+        config.let {
             val wxKey = it.WX_ID
             if (wxKey.isEmpty()) {
                 print("wx key in null")

@@ -25,11 +25,14 @@ public class App extends Application {
         super.onCreate();
         Config config = new Config();
         // TODO: 2017/7/5 设置各大平台的key
-        config.setWEIBO_KEY("222222");
+        config.setWEIBO_KEY("150941052");
         config.setWX_ID("222222");
         config.setQQ_ID("222222");
-        config.setAPP_NAME("222222");
-        Share.Ext.INSTANCE.init(this, config);
+        config.setAPP_NAME("啦啦啦");
+        Share.Ext.Companion.getInstance().init(this, config);
+
+
+
         List<ShareInfo> ones1 = new ArrayList<>();
         ones1.add(new ShareInfo(0, R.mipmap.ic_launcher, "微信分享"));
         ones1.add(new ShareInfo(1, R.mipmap.ic_launcher, "微博分享"));
@@ -45,8 +48,8 @@ public class App extends Application {
         ones1.add(new ShareInfo(7, R.mipmap.ic_launcher, "其他分享"));
         ShareItemData shareItemData1 = new ShareItemData(ones1, twos1);
         ShareItemData shareItemData2 = new ShareItemData(ones1, twos2);
-        Share.INSTANCE.ShareManager().putShareItemData(shareKey1, shareItemData1);
-        Share.INSTANCE.ShareManager().putShareItemData(shareKey2, shareItemData2);
+        Share.INSTANCE.shareManager().putShareItemData(shareKey1, shareItemData1);
+        Share.INSTANCE.shareManager().putShareItemData(shareKey2, shareItemData2);
     }
 
 }

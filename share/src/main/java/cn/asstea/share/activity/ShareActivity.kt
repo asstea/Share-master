@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Gravity
 import android.widget.LinearLayout
 import cn.asstea.share.Share
+import cn.asstea.share.ShareOnClickManager
 import cn.asstea.share.entity.ShareInfo
 import cn.asstea.share.entity.ShareItemData
 import cn.asstea.share.entity.ShareOnClickListener
@@ -22,7 +23,7 @@ import com.tencent.tauth.Tencent
  *     version: 1.0
  */
 
-class ShareActivity : AppCompatActivity() {
+open class ShareActivity : AppCompatActivity() {
 
     private val mShareSheetView by lazy {
         ShareSheetView(this)
@@ -36,7 +37,7 @@ class ShareActivity : AppCompatActivity() {
 
         const val SHARE_ITEM_DATA = "SHARE_ITEM_DATA"
 
-        fun startShareActivity(packageContext: Activity, shareItemData: ShareItemData): Unit {
+        fun startShareActivity(packageContext: Activity, shareItemData: ShareItemData) {
             val intent = Intent(packageContext, ShareActivity::class.java)
             intent.putExtra(SHARE_ITEM_DATA, shareItemData)
             packageContext.startActivityForResult(intent, ShareResult.ACTIVITY_REQUEST_CODE)
@@ -46,14 +47,30 @@ class ShareActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(mShareSheetView)
-        Share.Ext.shareManager.dialog = this
-        if (savedInstanceState == null) {
-            initView()
-        }
-        initData()
+        Share.Ext.instance.shareManager.dialog = this
+        setContentView()
     }
 
+    /**
+     * 重写这个方法可以覆盖本来的布局
+     */
+    open protected fun setContentView() {
+        setContentView(mShareSheetView)
+        window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+        window.setGravity(Gravity.BOTTOM)
+        setFinishOnTouchOutside(true)
+        mShareSheetView.setShareData(mShareItemData, object : ShareOnClickListener {
+            override fun click(shareInfo: ShareInfo) {
+                Share.shareManager().setShareOnClickListener(shareInfo)
+            }
+
+        })
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        Share.shareManager().shareWeiBo.mSinaSimplyHandler.onNewIntent(intent)
+    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -61,31 +78,26 @@ class ShareActivity : AppCompatActivity() {
         Tencent.onActivityResultData(requestCode, resultCode, data, null)
         //微博回调
         data?.let {
-            Share.ShareManager().shareWeiBo.onActivityResult(requestCode, resultCode, it)
+            Share.shareManager().shareWeiBo.onActivityResult(requestCode, resultCode, it)
         }
     }
 
-    private fun initView() {
-        window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-        window.setGravity(Gravity.BOTTOM)
-        setFinishOnTouchOutside(true)
-    }
-
-
-    private fun initData() {
-        mShareSheetView.setShareData(mShareItemData, object : ShareOnClickListener {
-            override fun click(shareInfo: ShareInfo) {
-                Share.Ext.shareManager.setShareOnClickListener(shareInfo)
-            }
-
-        })
-    }
-
     override fun finish() {
-        Share.Ext.shareManager.dialog = null
-        Share.Ext.shareManager.hide()
+        hidePage()
+    }
+
+    fun onlyFinish() {
+        super.finish()
+    }
+
+    private fun hidePage() {
         super.finish()
         overridePendingTransition(0, 0)
     }
 
+    override fun onDestroy() {
+        Share.Ext.instance.shareManager.dialog = null
+        ShareOnClickManager.unRegisterInstance()
+        super.onDestroy()
+    }
 }

@@ -1,8 +1,10 @@
 package cn.asstea.share.entity
 
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Parcel
 import android.os.Parcelable
+import java.util.*
 
 /**
  *     author : Holy
@@ -20,11 +22,11 @@ data class ShareInfo(
         var unSelectTitle: String //未选中标题
 ) : Parcelable {
 
-    constructor(id: Int, selectIcon: Int, selectTitle: String)
-            : this(id, false, selectIcon, selectIcon, selectTitle, selectTitle)
+    constructor(id: Int, selectIcon: Int, selectTitle: String) : this(id, false, selectIcon, selectIcon, selectTitle, selectTitle)
 
     companion object {
-        @JvmField val CREATOR: Parcelable.Creator<ShareInfo> = object : Parcelable.Creator<ShareInfo> {
+        @JvmField
+        val CREATOR: Parcelable.Creator<ShareInfo> = object : Parcelable.Creator<ShareInfo> {
             override fun createFromParcel(source: Parcel): ShareInfo = ShareInfo(source)
             override fun newArray(size: Int): Array<ShareInfo?> = arrayOfNulls(size)
         }
@@ -55,7 +57,8 @@ data class ShareItemData(
         var one: List<ShareInfo>?,
         var two: List<ShareInfo>?) : Parcelable {
     companion object {
-        @JvmField val CREATOR: Parcelable.Creator<ShareItemData> = object : Parcelable.Creator<ShareItemData> {
+        @JvmField
+        val CREATOR: Parcelable.Creator<ShareItemData> = object : Parcelable.Creator<ShareItemData> {
             override fun createFromParcel(source: Parcel): ShareItemData = ShareItemData(source)
             override fun newArray(size: Int): Array<ShareItemData?> = arrayOfNulls(size)
         }
@@ -81,28 +84,35 @@ interface ShareOnClickListener {
 
 interface ShareItemOnClickListener<in T> {
 
-    fun click(shareInfo: ShareInfo, data: T)
+    fun click(shareInfo: ShareInfo?, data: T?)
 
 }
 
 interface ShareResultCallback<in T> {
 
-    fun shareResult(shareInfo: ShareInfo, code: ShareResult.Code, data: T)
+    fun shareResult(shareInfo: ShareInfo?, code: ShareResultCode, data: T?)
+
+}
+
+
+interface ShareResultCallback1 {
+
+    fun shareResult(code: ShareResultCode)
 
 }
 
 object ShareResult {
 
-    val KEY_CODE_NAME = "KEY_CODE_NAME"
-    val KEY_SHAREINFO_NAME = "KEY_SHAREINFO_NAME"
-    val ACTIVITY_REQUEST_CODE: Int = 0x10
-    val ACTIVITY_RESULT_CODE: Int = 0x11
+    const val KEY_CODE_NAME = "KEY_CODE_NAME"
+    const val KEY_SHAREINFO_NAME = "KEY_SHAREINFO_NAME"
+    const val ACTIVITY_REQUEST_CODE: Int = 0x10
+    const val ACTIVITY_RESULT_CODE: Int = 0x11
 
-    enum class Code {
-        OK,
-        ERROR
-    }
+}
 
+enum class ShareResultCode {
+    OK,
+    ERROR
 }
 
 class WeixinShareInfo {
@@ -123,8 +133,11 @@ class WeiBoShareInfo {
     var url: String? = null
     var title: String? = null
     var bitmap: Bitmap? = null
+    var progressColor: Int = -1
+    var videoPath: Uri? = null
+    val imagePath = ArrayList<Uri>()
 
-    fun isNull() = url.isNullOrBlank() && title.isNullOrBlank() && bitmap != null
+    fun isNull() = url.isNullOrBlank() && title.isNullOrBlank() && bitmap != null && videoPath != null && imagePath.isEmpty()
 
 }
 

@@ -1,6 +1,7 @@
 package cn.asstea.share.sdk
 
 import cn.asstea.share.entity.QQShareInfo
+import cn.asstea.share.entity.ShareResultCallback1
 
 /**
  *     author : Holy
@@ -11,5 +12,7 @@ import cn.asstea.share.entity.QQShareInfo
 interface ShareQQ {
 
     fun shareToQQ(qQShareInfo: QQShareInfo)
+
+    fun shareToQQ(qQShareInfo: QQShareInfo, shareResultCallback: ShareResultCallback1){}
 
 }
